@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Account Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-gamepad"></i>
+                        <h1>Game Account Manager</h1>
+                    </div>
+                    <div class="header-actions">
+                        <button id="themeToggle" class="btn-icon">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button id="exportData" class="btn-secondary">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button id="importData" class="btn-secondary">
+                            <i class="fas fa-upload"></i> Import
+                        </button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Dashboard Stats -->
+                <div id="dashboardStats" class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalInvested">Rp 0</h3>
+                            <p>Total Invested</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon profit">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalProfit">Rp 0</h3>
+                            <p>Total Profit</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalAccounts">0</h3>
+                            <p>Total Accounts</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon available">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="availableAccounts">0</h3>
+                            <p>Available</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games View -->
+                <div id="gamesView" class="view active">
+                    <div class="view-header">
+                        <h2>Game Categories</h2>
+                        <div class="view-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchGames" placeholder="Search games...">
+                            </div>
+                            <button id="addGameBtn" class="btn-primary">
+                                <i class="fas fa-plus"></i> Add Game
+                            </button>
+                        </div>
+                    </div>
+                    <div id="gamesGrid" class="games-grid"></div>
+                </div>
+
+                <!-- Game Detail View -->
+                <div id="gameDetailView" class="view">
+                    <div class="view-header">
+                        <button id="backToGames" class="btn-back">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <h2 id="gameDetailTitle">Game Accounts</h2>
+                        <button id="addAccountBtn" class="btn-primary">
+                            <i class="fas fa-plus"></i> Add Account
+                        </button>
+                    </div>
+                    <div class="accounts-container">
+                        <div class="accounts-filters">
+                            <select id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="available">Available</option>
+                                <option value="sold">Sold</option>
+                                <option value="reserved">Reserved</option>
+                            </select>
+                            <input type="date" id="dateFilter" placeholder="Filter by date">
+                            <button id="clearFilters" class="btn-secondary">Clear</button>
+                        </div>
+                        <div id="accountsTable" class="accounts-table"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add Game Modal -->
+        <div id="gameModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="gameModalTitle">Add New Game</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="gameForm">
+                    <div class="form-group">
+                        <label for="gameName">Game Name</label>
+                        <input type="text" id="gameName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gameImage">Game Image (Optional)</label>
+                        <div class="image-upload" id="imageUpload">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click or drag image here</p>
+                            </div>
+                            <input type="file" id="gameImageInput" accept="image/*" style="display: none;">
+                            <img id="imagePreview" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Game</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Account Modal -->
+        <div id="accountModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="accountModalTitle">Add New Account</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <form id="accountForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="accountEmail">Email</label>
+                            <input type="email" id="accountEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountPassword">Password</label>
+                            <input type="password" id="accountPassword" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="buyPrice">Buy Price (Rp)</label>
+                            <input type="number" id="buyPrice" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="sellPrice">Sell Price (Rp)</label>
+                            <input type="number" id="sellPrice" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateBought">Date Bought</label>
+                            <input type="date" id="dateBought" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="accountStatus">Status</label>
+                            <select id="accountStatus" required>
+                                <option value="available">Available</option>
+                                <option value="reserved">Reserved</option>
+                                <option value="sold">Sold</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNotes">Notes (Optional)</label>
+                        <textarea id="accountNotes" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
